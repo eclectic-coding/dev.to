@@ -8,6 +8,10 @@ rvm:
   - 2.7.1
 addons:
   postgresql: '11'
+  apt:
+    packages:
+      - postgresql-11
+      - postgresql-client-11
   chrome: 'stable'
   artifacts:
     paths:
@@ -16,6 +20,7 @@ addons:
     debug: true
 services:
   - redis
+  - postgresql
 env:
   global:
     - RAILS_ENV=test
@@ -43,17 +48,17 @@ env:
 # branches:
 #   only:
 #     - master
-before_install:
-  - sudo apt-get update
-  - sudo apt-get --yes remove postgresql\*
-  - sudo apt-get install -y postgresql-11 postgresql-client-11
-  - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
-  - sudo service postgresql restart 11
-before_script:
-  - psql --version
-  - psql -c 'CREATE DATABASE {{your database name here}};' -U postgres
-  - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
-  - cp config/database.yml.travis config/database.yml
+# before_install:
+#   - sudo apt-get update
+#   - sudo apt-get --yes remove postgresql\*
+#   - sudo apt-get install -y postgresql-11 postgresql-client-11
+#   - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+#   - sudo service postgresql restart 11
+# before_script:
+#   - psql --version
+#   - psql -c 'CREATE DATABASE {{your database name here}};' -U postgres
+#   - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+#   - cp config/database.yml.travis config/database.yml
 script:
   - date --rfc-3339=seconds
   - nvm install
